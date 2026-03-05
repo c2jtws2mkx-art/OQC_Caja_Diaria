@@ -180,6 +180,41 @@ function saveAsientoFallback(asientoData) {
     return newAsiento.id;
 }
 
+// Actualizar un asiento existente
+export async function updateAsiento(id, asientoData) {
+    if (!isFirebaseConfigured) {
+        return updateAsientoFallback(id, asientoData);
+    }
+    try {
+        const asientoRef = doc(db, "caja_diaria", id);
+        await updateDoc(asientoRef, {
+            ...asientoData
+        });
+        return id;
+    } catch (e) {
+        console.warn("Fallback Actualizando Asiento", e);
+        return updateAsientoFallback(id, asientoData);
+    }
+}
+
+function updateAsientoFallback(id, asientoData) {
+    if (id.startsWith('local_') || id === '1' || id === '2') {
+        const localData = getLocalAsientos();
+        const index = localData.findIndex(a => a.id === id);
+        if (index !== -1) {
+            localData[index] = { ...localData[index], ...asientoData };
+            localStorage.setItem('oqc_asientos_fallback', JSON.stringify(localData));
+        } else {
+            // Mocks fallback
+            const mockIndex = mockAsientos.findIndex(a => a.id === id);
+            if (mockIndex !== -1) {
+                mockAsientos[mockIndex] = { ...mockAsientos[mockIndex], ...asientoData };
+            }
+        }
+    }
+    return id;
+}
+
 // Marcar como borrado lógico
 export async function deleteAsientoSoft(id) {
     if (!isFirebaseConfigured) {

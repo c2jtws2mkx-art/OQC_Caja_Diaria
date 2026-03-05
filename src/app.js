@@ -1,5 +1,7 @@
 // src/app.js
-import { getAsientosMesCorriente, saveAsiento, deleteAsientoSoft, restoreAsientoSoft } from './firebase.js';
+import { getAsientosMesCorriente, saveAsiento, updateAsiento, deleteAsientoSoft, restoreAsientoSoft } from './firebase.js';
+
+let currentEditId = null; // Track record being edited
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log("App initialized");
@@ -134,8 +136,14 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-            await saveAsiento(asientoData);
-            alert("Asiento guardado correctamente.");
+            if (currentEditId) {
+                await updateAsiento(currentEditId, asientoData);
+                alert("Asiento actualizado correctamente.");
+                currentEditId = null;
+            } else {
+                await saveAsiento(asientoData);
+                alert("Asiento guardado correctamente.");
+            }
             form.reset();
             // Reset totals UI manually
             document.getElementById('baseImponible').value = "0";
@@ -157,6 +165,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnLimpiar = document.getElementById('btnLimpiar');
     btnLimpiar.addEventListener('click', () => {
         form.reset();
+        currentEditId = null;
+        document.getElementById('btnGuardar').textContent = "Guardar";
         document.getElementById('baseImponible').value = "0";
         document.getElementById('montoIva').value = "0";
         document.getElementById('otrosCargos').value = "0";
@@ -356,7 +366,7 @@ async function renderList() {
             </td>
             <td class="text-right ${totalClass}">${totalStr}</td>
             <td class="text-center">
-                <button class="btn-view" title="Ver detalle" data-id="${asiento.id}"><i class="fa-solid fa-eye"></i></button>
+                <button class="btn-edit" title="Editar" data-id="${asiento.id}"><i class="fa-solid fa-pen"></i></button>
                 ${actionBtn}
             </td>
         `;
@@ -372,7 +382,9 @@ async function renderList() {
                             await restoreAsientoSoft(asiento.id);
                         }
 
-                        // 2. Load into the form
+                        // 2. Load into the form & set edit mode
+                        currentEditId = asiento.id;
+
                         if (asiento.tipo === 'gasto') {
                             document.getElementById('btnTypeGasto').click();
                         } else {
@@ -389,7 +401,9 @@ async function renderList() {
                         document.getElementById('porcentajeIva').value = asiento.porcentaje_iva || "21";
                         document.getElementById('montoIva').value = (asiento.monto_iva || 0).toFixed(2);
                         document.getElementById('otrosCargos').value = (asiento.otros_cargos || 0).toFixed(2);
-                        document.getElementById('total').value = (asiento.total || 0).toFixed(2);
+                        document.getElementById('total').value = (Math.abs(asiento.total) || 0).toFixed(2);
+
+                        document.getElementById('btnGuardar').textContent = "Actualizar";
 
                         // Scroll back up to the form so the user sees it
                         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -414,8 +428,37 @@ async function renderList() {
                     }
                 }
             });
+
+            // Lógica del botón Editar
+            const btnEdit = tr.querySelector('.btn-edit');
+            btnEdit.addEventListener('click', () => {
+                currentEditId = asiento.id;
+
+                if (asiento.tipo === 'gasto') {
+                    document.getElementById('btnTypeGasto').click();
+                } else {
+                    document.getElementById('btnTypeIngreso').click();
+                }
+
+                document.getElementById('fechaFactura').value = asiento.fecha_factura || "";
+                document.getElementById('proveedor').value = asiento.proveedor || "";
+                document.getElementById('cifNif').value = asiento.cif_nif || "";
+                document.getElementById('categoria').value = asiento.categoria || "Otros";
+                document.getElementById('detalle').value = asiento.detalle || "";
+
+                document.getElementById('baseImponible').value = (asiento.base_imponible || 0).toFixed(2);
+                document.getElementById('porcentajeIva').value = asiento.porcentaje_iva || "21";
+                document.getElementById('montoIva').value = (asiento.monto_iva || 0).toFixed(2);
+                document.getElementById('otrosCargos').value = (asiento.otros_cargos || 0).toFixed(2);
+                document.getElementById('total').value = (Math.abs(asiento.total) || 0).toFixed(2);
+
+                document.getElementById('btnGuardar').textContent = "Actualizar";
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
         }
 
+        // Ya no necesitamos btn-view
         // Popup visual img logic could go here on btn-view
 
         listBody.appendChild(tr);
