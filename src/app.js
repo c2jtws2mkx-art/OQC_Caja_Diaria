@@ -471,9 +471,6 @@ async function renderList() {
             });
         }
 
-        // Ya no necesitamos btn-view
-        // Popup visual img logic could go here on btn-view
-
         listBody.appendChild(tr);
     });
 

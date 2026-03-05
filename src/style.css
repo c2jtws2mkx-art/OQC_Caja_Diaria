@@ -381,10 +381,19 @@ select:focus {
     transform: scale(1.1);
 }
 
-.btn-view {
+.btn-edit {
     color: var(--primary-blue);
     background: none;
     padding: 0.4rem;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.btn-edit:hover {
+    color: var(--hover-blue);
+    transform: scale(1.1);
 }
 
 /* Modal */
