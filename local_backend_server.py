@@ -1,8 +1,8 @@
 import sys
 import os
 
-# Add netlify functions to path
-sys.path.append(os.path.abspath("netlify/functions/process_receipt"))
+# Add local python backend to path
+sys.path.append(os.path.abspath("local_python_backend"))
 
 from process_receipt import app as process_receipt_app
 from flask_cors import CORS

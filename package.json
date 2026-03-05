@@ -8,10 +8,11 @@
     "build": "vite build",
     "preview": "vite preview"
   },
-  "keywords": [],
-  "author": "",
   "license": "ISC",
   "type": "commonjs",
+  "dependencies": {
+    "@google/generative-ai": "latest"
+  },
   "devDependencies": {
     "vite": "^5.2.0"
   }
