@@ -1,0 +1,446 @@
+/* src/style.css */
+:root {
+    /* Colors derived from mockups */
+    --primary-blue: #3b82f6;
+    /* Blue for headers and primary buttons */
+    --hover-blue: #2563eb;
+
+    --gasto-red: #ef4444;
+    /* Gasto toggle */
+    --gasto-light: #fee2e2;
+
+    --ingreso-green: #22c55e;
+    --ingreso-light: #dcfce7;
+
+    --success-green: #15803d;
+    /* Text for positive amounts and Save button */
+    --success-hover: #166534;
+
+    --bg-light: #f3f4f6;
+    /* Very light gray for background */
+    --card-bg: #ffffff;
+
+    --text-main: #1f2937;
+    --text-muted: #6b7280;
+
+    --border-color: #cbd5e1;
+    --border-hover: #94a3b8;
+
+    /* Variables */
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Base Mobile First (iPhone SE width: 375px) */
+.container {
+    padding: 1rem;
+    max-width: 960px;
+    /* Ampliado para mejor soporte iPad (Landscape) */
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    /* Separación un poco más amplia */
+}
+
+/* Header */
+.app-header {
+    background-color: var(--card-bg);
+    padding: 1rem;
+    text-align: center;
+    border-bottom: 2px solid var(--primary-blue);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.app-header h1 {
+    color: var(--primary-blue);
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+/* Cards */
+.summary-card,
+.form-card,
+.list-card {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius-lg);
+    padding: 1.25rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+/* Summary Box */
+.summary-card {
+    text-align: center;
+}
+
+.summary-title {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.summary-amount {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0.5rem 0;
+}
+
+.summary-amount.positive {
+    color: var(--success-green);
+}
+
+.summary-amount.negative {
+    color: var(--gasto-red);
+}
+
+.summary-subtitle {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* Buttons */
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    border-radius: var(--border-radius-md);
+    font-weight: 500;
+}
+
+.btn-scan {
+    width: 100%;
+    background-color: var(--primary-blue);
+    color: white;
+    padding: 0.75rem;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn-scan:hover {
+    background-color: var(--hover-blue);
+}
+
+.btn-guardar {
+    background-color: var(--success-green);
+    color: white;
+    padding: 0.75rem 1.5rem;
+}
+
+.btn-guardar:hover {
+    background-color: var(--success-hover);
+}
+
+.btn-limpiar {
+    background-color: #e2e8f0;
+    color: var(--text-main);
+    padding: 0.75rem 1.5rem;
+}
+
+.btn-limpiar:hover {
+    background-color: #cbd5e1;
+}
+
+.btn-secondary {
+    background-color: #f1f5f9;
+    color: var(--text-main);
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    border-radius: var(--border-radius-sm);
+}
+
+/* Type Toggle */
+.type-toggle {
+    display: flex;
+    margin-bottom: 1.5rem;
+    background-color: #f1f5f9;
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    padding: 4px;
+}
+
+.toggle-btn {
+    flex: 1;
+    padding: 0.75rem;
+    background: transparent;
+    color: var(--text-muted);
+    border-radius: var(--border-radius-md);
+}
+
+.toggle-btn.active-gasto {
+    background-color: var(--gasto-red);
+    color: white;
+}
+
+.toggle-btn.active-ingreso {
+    background-color: var(--success-green);
+    color: white;
+}
+
+/* Form Groups */
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    /* Para móviles */
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.form-group {
+    flex: 1;
+    min-width: 140px;
+    /* Asegura que no se colapsen demasiado en movil */
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full-width {
+    flex-basis: 100%;
+}
+
+label {
+    font-size: 0.8rem;
+    color: var(--text-main);
+    margin-bottom: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+input,
+select {
+    font-family: inherit;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    font-size: 0.95rem;
+    background-color: white;
+    color: var(--text-main);
+    transition: border-color 0.2s;
+    width: 100%;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+/* Grid específico para precios (4 columnas en PC, 2 en móvil) */
+.prices-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1rem;
+}
+
+/* Icon Button */
+.icon-btn {
+    background: none;
+    color: var(--primary-blue);
+    padding: 0.2rem;
+}
+
+.icon-btn:hover {
+    color: var(--hover-blue);
+}
+
+/* Table styling */
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.list-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.table-responsive {
+    overflow-x: auto;
+    margin-top: 1rem;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.data-table th,
+.data-table td {
+    padding: 0.75rem 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+    text-align: left;
+}
+
+.data-table th {
+    color: var(--text-muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+.amount-gasto {
+    color: var(--gasto-red);
+}
+
+.amount-ingreso {
+    color: var(--success-green);
+    font-weight: 500;
+}
+
+.btn-delete {
+    background-color: transparent;
+    color: var(--gasto-red);
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.btn-delete:hover {
+    color: #ff3333;
+    transform: scale(1.1);
+}
+
+.btn-restore {
+    background-color: transparent;
+    color: var(--primary-color);
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.btn-restore:hover {
+    color: var(--primary-hover);
+    transform: scale(1.1);
+}
+
+.btn-view {
+    color: var(--primary-blue);
+    background: none;
+    padding: 0.4rem;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    margin: 10% auto;
+    /* Ajuste para móvil */
+    padding: 1.5rem;
+    border-radius: var(--border-radius-lg);
+    width: 95%;
+    max-width: 500px;
+    position: relative;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+.close-modal {
+    position: absolute;
+    right: 1.5rem;
+    top: 1.25rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.close-modal:hover {
+    color: var(--gasto-red);
+}
+
+.search-container {
+    margin: 1rem 0;
+}
+
+.search-container input {
+    border-radius: 20px;
+    padding-left: 1rem;
+}
+
+/* Media Queries for Tablet/iPad/Desktop */
+@media (min-width: 768px) {
+
+    /* Breakpoint típico iPad */
+    .container {
+        padding: 2.5rem;
+    }
+
+    .prices-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+    }
+
+    .modal-content {
+        margin: 5% auto;
+        padding: 2rem;
+    }
+}

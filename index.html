@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ojú qué calor - Caja Diaria</title>
+    <!-- Google Fonts: Roboto for clean, modern look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/src/style.css">
+</head>
+
+<body>
+    <header class="app-header">
+        <h1>Ojú qué calor IA v3.1 (iOS Fixed)</h1>
+    </header>
+
+    <main class="container">
+        <!-- Resumen del Mes -->
+        <section class="summary-card">
+            <h2 class="summary-title" id="summaryMonthLabel">CAJA CHICA DE MARZO</h2>
+            <div class="summary-amount positive" id="summaryTotal">0,00 €</div>
+            <div class="summary-subtitle">Ingresos - Gastos</div>
+        </section>
+
+        <!-- Formulario Nuevo Asiento -->
+        <section class="form-card">
+            <h2 class="section-title">Nuevo Asiento</h2>
+
+            <button type="button" class="btn-scan" id="btnScan">
+                <i class="fa-solid fa-camera"></i> Escanear o Subir Factura
+            </button>
+            <input type="file" id="receiptFileInput" accept="image/*" capture="environment" style="display: none;">
+
+            <form id="entryForm">
+                <div class="type-toggle">
+                    <button type="button" class="toggle-btn active-gasto" id="btnTypeGasto"
+                        data-type="gasto">Gasto</button>
+                    <button type="button" class="toggle-btn" id="btnTypeIngreso" data-type="ingreso">Ingreso</button>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fechaFactura">Fecha Factura</label>
+                        <input type="date" id="fechaFactura" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="proveedor">Proveedor <button type="button" id="btnOpenContacts" class="icon-btn"
+                                title="Buscar Contacto"><i class="fa-solid fa-address-book"></i></button></label>
+                        <input type="text" id="proveedor" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="cifNif">CIF/NIF</label>
+                        <input type="text" id="cifNif">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="categoria">Categoría</label>
+                        <select id="categoria" required>
+                            <option value="Otros">Otros</option>
+                            <option value="Comidas">Comidas</option>
+                            <option value="Desplazamientos">Desplazamientos</option>
+                            <option value="Suministros">Suministros</option>
+                            <option value="Tecnología">Tecnología</option>
+                            <option value="Nave">Nave</option>
+                            <option value="Fontanería">Fontanería</option>
+                            <option value="Climatización">Climatización</option>
+                            <option value="Albañilería">Albañilería</option>
+                            <option value="Chapuzas">Chapuzas</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="detalle">Detalle / Concepto</label>
+                        <input type="text" id="detalle">
+                    </div>
+                </div>
+
+                <div class="prices-grid">
+                    <div class="form-group">
+                        <label for="baseImponible">Base Imp.</label>
+                        <input type="number" step="0.01" id="baseImponible" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="porcentajeIva">% IVA</label>
+                        <select id="porcentajeIva">
+                            <option value="0">0</option>
+                            <option value="4">4</option>
+                            <option value="10">10</option>
+                            <option value="21" selected>21</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="montoIva">Monto IVA</label>
+                        <input type="number" step="0.01" id="montoIva" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="otrosCargos">Otros Cargos</label>
+                        <input type="number" step="0.01" id="otrosCargos" value="0">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="total">Total</label>
+                        <input type="number" step="0.01" id="total" value="0"
+                            style="font-weight: bold; font-size: 1.1em;">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-limpiar" id="btnLimpiar">Limpiar</button>
+                    <button type="submit" class="btn-guardar" id="btnGuardar">Guardar</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Listado del Mes -->
+        <section class="list-card">
+            <div class="list-header">
+                <h2 class="section-title">Asientos del Mes</h2>
+                <div class="list-actions">
+                    <button type="button" class="btn-secondary" id="btnViewAnnual"><i class="fa-solid fa-list"></i> Ver
+                        listado
+                        anual</button>
+                    <button type="button" class="btn-secondary"><i class="fa-solid fa-file-export"></i>
+                        Exportar</button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>FECHA</th>
+                            <th>PROVEEDOR</th>
+                            <th class="text-right">TOTAL</th>
+                            <th class="text-center">ACCIONES</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaMesBody">
+                        <!-- Las filas se llenarán por JS -->
+                        <tr>
+                            <td colspan="4" class="text-center" style="padding: 2rem;">Cargando registros...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    <!-- Vista Anual (Oculta por defecto) -->
+    <main class="container" id="annualView" style="display: none;">
+        <section class="list-card">
+            <div class="list-header" style="margin-bottom: 1rem;">
+                <h2 class="section-title">Listado Anual</h2>
+                <div class="list-actions">
+                    <button type="button" class="btn-secondary" id="btnBackToDash"><i
+                            class="fa-solid fa-arrow-left"></i> Volver</button>
+                    <button type="button" class="btn-secondary"><i class="fa-solid fa-file-export"></i>
+                        Exportar</button>
+                </div>
+            </div>
+
+            <div class="form-row"
+                style="background: var(--bg-light); padding: 1rem; border-radius: var(--border-radius-md); margin-bottom: 1rem;">
+                <div class="form-group">
+                    <label for="filterTrimestre">Filtro Trimestre</label>
+                    <select id="filterTrimestre">
+                        <option value="ALL">Todo el Año</option>
+                        <option value="T1">T1 (Ene-Mar)</option>
+                        <option value="T2">T2 (Abr-Jun)</option>
+                        <option value="T3">T3 (Jul-Sep)</option>
+                        <option value="T4">T4 (Oct-Dic)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filterCategoria">Filtro Categoría</label>
+                    <select id="filterCategoria">
+                        <option value="ALL">Todas</option>
+                        <option value="Fontanería">Fontanería</option>
+                        <option value="Climatización">Climatización</option>
+                        <option value="Tecnología">Tecnología</option>
+                        <option value="Otros">Otros</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="annualSummaryBox" style="display:flex; gap:1rem; margin-bottom:1rem; flex-wrap:wrap;">
+                <!-- Cajas de resumen inyectadas por JS -->
+            </div>
+
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>FECHA</th>
+                            <th>PROVEEDOR</th>
+                            <th>CATEGORÍA</th>
+                            <th>DETALLE</th>
+                            <th class="text-right">TOTAL</th>
+                            <th class="text-center">ACCIONES</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaAnualBody">
+                        <tr>
+                            <td colspan="6" class="text-center" style="padding: 2rem;">Cargando registros...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal de Contactos -->
+    <div id="contactsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeContactsModal">&times;</span>
+            <h2>Gestión de Contactos</h2>
+            <div class="modal-body">
+                <div class="search-container">
+                    <input type="text" id="searchContact" placeholder="Buscar contacto por nombre o CIF...">
+                </div>
+                <div class="contacts-list-container" id="contactsList">
+                    <!-- Registros de contactos -->
+                </div>
+                <hr style="margin: 1.5rem 0; border: 0; border-top: 1px solid var(--border-color);">
+                <h3>Nuevo Contacto</h3>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="newContactName">Nombre/Razón Social</label>
+                        <input type="text" id="newContactName" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="newContactCif">CIF/NIF</label>
+                            <input type="text" id="newContactCif">
+                        </div>
+                        <div class="form-group">
+                            <label for="newContactTel">Teléfono</label>
+                            <input type="tel" id="newContactTel">
+                        </div>
+                    </div>
+                    <div class="form-group text-right" style="margin-top: 1rem;">
+                        <button type="submit" class="btn-guardar">Guardar Contacto</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="/src/app.js"></script>
+    <script type="module" src="/src/contactos.js"></script>
+    <script type="module" src="/src/anual.js"></script>
+</body>
+
+</html>
