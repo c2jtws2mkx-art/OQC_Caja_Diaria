@@ -20,11 +20,27 @@
     </header>
 
     <main class="container">
-        <!-- Resumen del Mes -->
-        <section class="summary-card">
-            <h2 class="summary-title" id="summaryMonthLabel">CAJA CHICA DE MARZO</h2>
-            <div class="summary-amount positive" id="summaryTotal">0,00 €</div>
-            <div class="summary-subtitle">Ingresos - Gastos</div>
+        <!-- Resumen del Mes (Tarjetas Superiores) -->
+        <section class="summary-card"
+            style="margin-bottom: 2rem; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 1rem;">
+            <div
+                style="text-align: center; background: var(--bg-surface); padding: 1.5rem; border-radius: var(--border-radius-lg); box-shadow: var(--shadow-sm); flex: 1; min-width: 120px;">
+                <h3 style="margin: 0; font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase;">Saldo
+                    Actual</h3>
+                <div class="summary-amount" id="summaryTotal" style="margin-top: 0.5rem;">0,00 €</div>
+            </div>
+            <div
+                style="text-align: center; background: var(--bg-surface); padding: 1.5rem; border-radius: var(--border-radius-lg); box-shadow: var(--shadow-sm); flex: 1; min-width: 120px;">
+                <h3 style="margin: 0; font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase;">Ingresos
+                </h3>
+                <div class="summary-amount positive" id="summaryIngresos" style="margin-top: 0.5rem;">0,00 €</div>
+            </div>
+            <div
+                style="text-align: center; background: var(--bg-surface); padding: 1.5rem; border-radius: var(--border-radius-lg); box-shadow: var(--shadow-sm); flex: 1; min-width: 120px;">
+                <h3 style="margin: 0; font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase;">Gastos
+                </h3>
+                <div class="summary-amount negative" id="summaryGastos" style="margin-top: 0.5rem;">0,00 €</div>
+            </div>
         </section>
 
         <!-- Formulario Nuevo Asiento -->
@@ -123,16 +139,55 @@
             </form>
         </section>
 
-        <!-- Listado del Mes -->
+        <!-- Listado Principal con Filtros -->
         <section class="list-card">
-            <div class="list-header">
-                <h2 class="section-title">Asientos del Mes</h2>
-                <div class="list-actions">
-                    <button type="button" class="btn-secondary" id="btnViewAnnual"><i class="fa-solid fa-list"></i> Ver
-                        listado
-                        anual</button>
-                    <button type="button" class="btn-secondary"><i class="fa-solid fa-file-export"></i>
-                        Exportar</button>
+            <div class="list-header" style="flex-direction: column; align-items: stretch; gap: 1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <h2 class="section-title" style="margin: 0;">Asientos Bancarios</h2>
+                    <div class="list-actions">
+                        <button type="button" class="btn-secondary" id="btnExportCSV"><i
+                                class="fa-solid fa-file-export"></i> Exportar</button>
+                    </div>
+                </div>
+
+                <!-- Filtros del Listado -->
+                <div class="form-row"
+                    style="background: var(--bg-light); padding: 1rem; border-radius: var(--border-radius-md); margin-bottom: 0;">
+                    <div class="form-group flex-1">
+                        <label for="filterMes">Mes</label>
+                        <select id="filterMes">
+                            <option value="ALL">Todos los Meses</option>
+                            <option value="01">Enero</option>
+                            <option value="02">Febrero</option>
+                            <option value="03">Marzo</option>
+                            <option value="04">Abril</option>
+                            <option value="05">Mayo</option>
+                            <option value="06">Junio</option>
+                            <option value="07">Julio</option>
+                            <option value="08">Agosto</option>
+                            <option value="09">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                        </select>
+                    </div>
+                    <div class="form-group flex-1">
+                        <label for="filterAnio">Año</label>
+                        <select id="filterAnio">
+                            <!-- JS fill dynamically -->
+                            <option value="2026">2026</option>
+                            <option value="ALL">Histórico Completo</option>
+                        </select>
+                    </div>
+                    <div class="form-group flex-1">
+                        <label for="filterCategoriaList">Categoría</label>
+                        <select id="filterCategoriaList">
+                            <option value="ALL">Todas</option>
+                            <option value="Comidas">Comidas</option>
+                            <option value="Desplazamientos">Desplazamientos</option>
+                            <option value="Suministros">Suministros</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
@@ -156,68 +211,7 @@
             </div>
         </section>
     </main>
-    <!-- Vista Anual (Oculta por defecto) -->
-    <main class="container" id="annualView" style="display: none;">
-        <section class="list-card">
-            <div class="list-header" style="margin-bottom: 1rem;">
-                <h2 class="section-title">Listado Anual</h2>
-                <div class="list-actions">
-                    <button type="button" class="btn-secondary" id="btnBackToDash"><i
-                            class="fa-solid fa-arrow-left"></i> Volver</button>
-                    <button type="button" class="btn-secondary"><i class="fa-solid fa-file-export"></i>
-                        Exportar</button>
-                </div>
-            </div>
-
-            <div class="form-row"
-                style="background: var(--bg-light); padding: 1rem; border-radius: var(--border-radius-md); margin-bottom: 1rem;">
-                <div class="form-group">
-                    <label for="filterTrimestre">Filtro Trimestre</label>
-                    <select id="filterTrimestre">
-                        <option value="ALL">Todo el Año</option>
-                        <option value="T1">T1 (Ene-Mar)</option>
-                        <option value="T2">T2 (Abr-Jun)</option>
-                        <option value="T3">T3 (Jul-Sep)</option>
-                        <option value="T4">T4 (Oct-Dic)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="filterCategoria">Filtro Categoría</label>
-                    <select id="filterCategoria">
-                        <option value="ALL">Todas</option>
-                        <option value="Fontanería">Fontanería</option>
-                        <option value="Climatización">Climatización</option>
-                        <option value="Tecnología">Tecnología</option>
-                        <option value="Otros">Otros</option>
-                    </select>
-                </div>
-            </div>
-
-            <div id="annualSummaryBox" style="display:flex; gap:1rem; margin-bottom:1rem; flex-wrap:wrap;">
-                <!-- Cajas de resumen inyectadas por JS -->
-            </div>
-
-            <div class="table-responsive">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>FECHA</th>
-                            <th>PROVEEDOR</th>
-                            <th>CATEGORÍA</th>
-                            <th>DETALLE</th>
-                            <th class="text-right">TOTAL</th>
-                            <th class="text-center">ACCIONES</th>
-                        </tr>
-                    </thead>
-                    <tbody id="listaAnualBody">
-                        <tr>
-                            <td colspan="6" class="text-center" style="padding: 2rem;">Cargando registros...</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </main>
+    <!-- Vista anual eliminada -->
 
     <!-- Modal de Contactos -->
     <div id="contactsModal" class="modal">
@@ -259,7 +253,6 @@
     <!-- Scripts -->
     <script type="module" src="/src/app.js"></script>
     <script type="module" src="/src/contactos.js"></script>
-    <script type="module" src="/src/anual.js"></script>
 </body>
 
 </html>
