@@ -256,9 +256,30 @@ document.addEventListener('DOMContentLoaded', () => {
 // Global state for seats
 let asientosList = [];
 
+// Elementos de Filtro
+const filterMes = document.getElementById('filterMes');
+const filterAnio = document.getElementById('filterAnio');
+const filterCategoriaList = document.getElementById('filterCategoriaList');
+
+// Auto-seleccionar el mes actual al iniciar
+if (filterMes) {
+    const mm = String(new Date().getMonth() + 1).padStart(2, '0');
+    filterMes.value = mm;
+}
+if (filterAnio) {
+    const yyyy = new Date().getFullYear().toString();
+    filterAnio.innerHTML = `<option value="ALL">Todos</option><option value="${yyyy}" selected>${yyyy}</option><option value="${yyyy - 1}">${yyyy - 1}</option>`;
+}
+
+if (filterMes) filterMes.addEventListener('change', renderList);
+if (filterAnio) filterAnio.addEventListener('change', renderList);
+if (filterCategoriaList) filterCategoriaList.addEventListener('change', renderList);
+
 async function renderList() {
     const listBody = document.getElementById('listaMesBody');
     const summaryTotal = document.getElementById('summaryTotal');
+    const summaryIngresos = document.getElementById('summaryIngresos');
+    const summaryGastos = document.getElementById('summaryGastos');
 
     listBody.innerHTML = '<tr><td colspan="4" class="text-center">Cargando...</td></tr>';
 
@@ -267,19 +288,45 @@ async function renderList() {
 
     listBody.innerHTML = '';
     let totalMes = 0;
+    let totalIngresos = 0;
+    let totalGastos = 0;
 
-    if (asientosList.length === 0) {
-        listBody.innerHTML = '<tr><td colspan="4" class="text-center">No hay asientos este mes</td></tr>';
+    // Aplicar Filtros Globales
+    const valMes = filterMes ? filterMes.value : 'ALL';
+    const valAnio = filterAnio ? filterAnio.value : 'ALL';
+    const valCat = filterCategoriaList ? filterCategoriaList.value : 'ALL';
+
+    const asientosFiltrados = asientosList.filter(asiento => {
+        if (!asiento.fecha_factura) return true;
+
+        let [y, m, d] = asiento.fecha_factura.split('-');
+
+        if (valMes !== 'ALL' && m !== valMes) return false;
+        if (valAnio !== 'ALL' && y !== valAnio) return false;
+        if (valCat !== 'ALL' && asiento.categoria !== valCat) return false;
+
+        return true;
+    });
+
+    if (asientosFiltrados.length === 0) {
+        listBody.innerHTML = '<tr><td colspan="4" class="text-center">No hay asientos con esos filtros</td></tr>';
         summaryTotal.textContent = '0,00 €';
         summaryTotal.className = 'summary-amount';
+        if (summaryIngresos) summaryIngresos.textContent = '0,00 €';
+        if (summaryGastos) summaryGastos.textContent = '0,00 €';
         return;
     }
 
-    asientosList.forEach(asiento => {
+    asientosFiltrados.forEach(asiento => {
         const isDeleted = asiento.borrado_logico === true;
 
         if (!isDeleted) {
             totalMes += asiento.total;
+            if (asiento.tipo === 'ingreso') {
+                totalIngresos += asiento.total;
+            } else {
+                totalGastos += Math.abs(asiento.total);
+            }
         }
 
         const tr = document.createElement('tr');
@@ -374,11 +421,21 @@ async function renderList() {
         listBody.appendChild(tr);
     });
 
-    // Actualizar Resumen
-    summaryTotal.textContent = totalMes.toFixed(2) + ' €';
-    if (totalMes >= 0) {
-        summaryTotal.className = 'summary-amount positive';
-    } else {
-        summaryTotal.className = 'summary-amount negative';
+    // Actualizar Resumen (Tarjetas)
+    if (summaryTotal) {
+        summaryTotal.textContent = totalMes.toFixed(2) + ' €';
+        if (totalMes >= 0) {
+            summaryTotal.className = 'summary-amount positive';
+        } else {
+            summaryTotal.className = 'summary-amount negative';
+        }
+    }
+
+    if (summaryIngresos) {
+        summaryIngresos.textContent = totalIngresos.toFixed(2) + ' €';
+    }
+
+    if (summaryGastos) {
+        summaryGastos.textContent = totalGastos.toFixed(2) + ' €';
     }
 }

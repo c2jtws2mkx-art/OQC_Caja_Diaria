@@ -87,11 +87,12 @@ export const mockAsientos = [
  * 
  */
 
-// Traer asientos del mes en curso (no borrados logicamente y que su fecha sea del mes actual)
+// Traer todos los asientos del año en curso para permitir filtrado en el frontend
 export async function getAsientosMesCorriente() {
     const today = new Date();
-    const firstDay = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
-    const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
+    // Forzamos a traer desde Enero 1
+    const firstDay = new Date(today.getFullYear(), 0, 1).toISOString().split('T')[0];
+    const lastDay = new Date(today.getFullYear(), 11, 31).toISOString().split('T')[0];
 
     return fetchAsientos(firstDay, lastDay);
 }
