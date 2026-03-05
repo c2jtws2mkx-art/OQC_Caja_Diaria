@@ -87,11 +87,11 @@ export const mockAsientos = [
  * 
  */
 
-// Traer todos los asientos del año en curso para permitir filtrado en el frontend
+// Traer todos los asientos desde 2025 (Año Fiscal Anterior) hasta fin del año actual
 export async function getAsientosMesCorriente() {
     const today = new Date();
-    // Forzamos a traer desde Enero 1
-    const firstDay = new Date(today.getFullYear(), 0, 1).toISOString().split('T')[0];
+    // Forzamos a traer desde Enero 1 de 2025
+    const firstDay = '2025-01-01';
     const lastDay = new Date(today.getFullYear(), 11, 31).toISOString().split('T')[0];
 
     return fetchAsientos(firstDay, lastDay);

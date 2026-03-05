@@ -154,21 +154,29 @@
                 <div class="form-row"
                     style="background: var(--bg-light); padding: 1rem; border-radius: var(--border-radius-md); margin-bottom: 0;">
                     <div class="form-group flex-1">
-                        <label for="filterMes">Mes</label>
+                        <label for="filterMes">Periodo</label>
                         <select id="filterMes">
-                            <option value="ALL">Todos los Meses</option>
-                            <option value="01">Enero</option>
-                            <option value="02">Febrero</option>
-                            <option value="03">Marzo</option>
-                            <option value="04">Abril</option>
-                            <option value="05">Mayo</option>
-                            <option value="06">Junio</option>
-                            <option value="07">Julio</option>
-                            <option value="08">Agosto</option>
-                            <option value="09">Septiembre</option>
-                            <option value="10">Octubre</option>
-                            <option value="11">Noviembre</option>
-                            <option value="12">Diciembre</option>
+                            <option value="ALL">Todo el Año</option>
+                            <optgroup label="Trimestres">
+                                <option value="T1">T1 (Ene-Mar)</option>
+                                <option value="T2">T2 (Abr-Jun)</option>
+                                <option value="T3">T3 (Jul-Sep)</option>
+                                <option value="T4">T4 (Oct-Dic)</option>
+                            </optgroup>
+                            <optgroup label="Meses">
+                                <option value="01">Enero</option>
+                                <option value="02">Febrero</option>
+                                <option value="03">Marzo</option>
+                                <option value="04">Abril</option>
+                                <option value="05">Mayo</option>
+                                <option value="06">Junio</option>
+                                <option value="07">Julio</option>
+                                <option value="08">Agosto</option>
+                                <option value="09">Septiembre</option>
+                                <option value="10">Octubre</option>
+                                <option value="11">Noviembre</option>
+                                <option value="12">Diciembre</option>
+                            </optgroup>
                         </select>
                     </div>
                     <div class="form-group flex-1">

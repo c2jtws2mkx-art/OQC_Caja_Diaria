@@ -311,7 +311,20 @@ async function renderList() {
 
         let [y, m, d] = asiento.fecha_factura.split('-');
 
-        if (valMes !== 'ALL' && m !== valMes) return false;
+        if (valMes !== 'ALL') {
+            if (valMes.startsWith('T')) {
+                // Lógica de Trimestre
+                const mesNum = parseInt(m, 10);
+                if (valMes === 'T1' && (mesNum < 1 || mesNum > 3)) return false;
+                if (valMes === 'T2' && (mesNum < 4 || mesNum > 6)) return false;
+                if (valMes === 'T3' && (mesNum < 7 || mesNum > 9)) return false;
+                if (valMes === 'T4' && (mesNum < 10 || mesNum > 12)) return false;
+            } else {
+                // Mes exacto
+                if (m !== valMes) return false;
+            }
+        }
+
         if (valAnio !== 'ALL' && y !== valAnio) return false;
         if (valCat !== 'ALL' && asiento.categoria !== valCat) return false;
 
